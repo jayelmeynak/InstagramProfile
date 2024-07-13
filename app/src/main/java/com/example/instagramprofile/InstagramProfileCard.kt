@@ -20,7 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,8 +32,10 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun InstagramProfileCard(topPadding: PaddingValues, viewModel: MainViewModel) {
-    val isFollowed = viewModel.isFollowing.observeAsState(initial = true)
+fun InstagramProfileCard(
+    topPadding: PaddingValues, model: InstagramModel,
+    onFollowedButtonClickListener: (InstagramModel) -> Unit
+) {
     Card(
         modifier = Modifier.padding(top = topPadding.calculateTopPadding()),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
@@ -63,13 +64,13 @@ fun InstagramProfileCard(topPadding: PaddingValues, viewModel: MainViewModel) {
                 UserStatistics("Following", "76")
             }
             Text(
-                text = "Instagram",
+                text = "Instagram ${model.id}",
                 fontSize = 32.sp,
                 fontFamily = FontFamily.Cursive,
                 modifier = Modifier.padding(4.dp)
             )
             Text(
-                text = "#YoursToMake",
+                text = "#${model.title}",
                 fontSize = 14.sp,
                 modifier = Modifier.padding(4.dp)
             )
@@ -78,8 +79,8 @@ fun InstagramProfileCard(topPadding: PaddingValues, viewModel: MainViewModel) {
                 fontSize = 14.sp,
                 modifier = Modifier.padding(4.dp)
             )
-            FollowButton(isFollowed = isFollowed.value) {
-                viewModel.changeFollowingState()
+            FollowButton(isFollowed = model.followed) {
+                onFollowedButtonClickListener(model)
             }
         }
     }
